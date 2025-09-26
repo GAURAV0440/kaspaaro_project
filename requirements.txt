@@ -1,0 +1,9 @@
+pandas
+numpy
+python-dotenv
+jupyter   # optional, only if you want notebooks in VS Code
+google-generativeai
+streamlit
+pypandoc
+openpyxl  # for Excel file support
+markdown  # for markdown processing
