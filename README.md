@@ -61,3 +61,9 @@ python src/phase5_d2c_cleaning.py
 
 For Streamlit
 streamlit run src/phase4_dashboard.py
+
+<img width="1837" height="1005" alt="image" src="https://github.com/user-attachments/assets/01b101d1-61f6-4ba9-a068-d31893968add" />
+
+<img width="1837" height="1005" alt="image" src="https://github.com/user-attachments/assets/bf210c39-a6fa-433e-8d71-f3afb021f351" />
+
+<img width="1837" height="1005" alt="image" src="https://github.com/user-attachments/assets/31969e4b-c4dd-45af-b3e2-de80692a6c39" />
