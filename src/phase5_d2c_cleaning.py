@@ -4,27 +4,35 @@ import json
 from dotenv import load_dotenv
 import google.generativeai as genai
 
-# File paths
+# Define file paths for D2C analysis pipeline
+# I have used these constants to make file locations easy to manage
 RAW_FILE = "./data/raw/Kasparro_Phase5_D2C_Synthetic_Dataset.xlsx"
 OUTPUT_FILE = "./data/processed/d2c_cleaned.csv"
 INSIGHTS_FILE = "./data/processed/d2c_insights.json"
 
 def clean_d2c():
-    # Load Excel
+    # Load Excel file containing D2C marketing data
+    # This is done because the raw data is stored in Excel format
     df = pd.read_excel(RAW_FILE)
 
-    # Standardize column names
+    # Standardize column names to lowercase with underscores
+    # I have used this because consistent naming makes data processing easier
     df.columns = [c.strip().lower().replace(" ", "_") for c in df.columns]
 
-    # Drop duplicates & fill nulls
+    # Remove duplicate records and fill missing values with zeros
+    # This is done because duplicates skew analysis and nulls break calculations
     df = df.drop_duplicates()
     df = df.fillna(0)
 
-    # ---- Calculate key metrics ----
-    # CAC = spend / installs
+    # Calculate key marketing performance metrics
+    # I have used these calculations because they are essential for D2C analysis
+    
+    # CAC (Customer Acquisition Cost) = spend / installs
+    # This is done because CAC is a critical metric for marketing efficiency
     df["cac"] = df.apply(lambda x: x["spend_usd"] / x["installs"] if x["installs"] > 0 else 0, axis=1)
 
-    # ROAS = revenue / spend
+    # ROAS (Return on Ad Spend) = revenue / spend
+    # I have used this because ROAS measures marketing profitability
     df["roas"] = df.apply(lambda x: x["revenue_usd"] / x["spend_usd"] if x["spend_usd"] > 0 else 0, axis=1)
 
     # CTR = clicks / impressions
@@ -36,7 +44,7 @@ def clean_d2c():
     # Save cleaned CSV
     os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
     df.to_csv(OUTPUT_FILE, index=False)
-    print(f"✅ D2C cleaned dataset with metrics saved to: {OUTPUT_FILE}")
+    print(f"SUCCESS: D2C cleaned dataset with metrics saved to: {OUTPUT_FILE}")
 
     return df
 
@@ -112,7 +120,7 @@ def generate_insights(df):
     with open(INSIGHTS_FILE, "w") as f:
         json.dump(insights, f, indent=2)
 
-    print(f"✅ D2C insights saved to: {INSIGHTS_FILE}")
+    print(f"SUCCESS: D2C insights saved to: {INSIGHTS_FILE}")
 
 if __name__ == "__main__":
     df = clean_d2c()

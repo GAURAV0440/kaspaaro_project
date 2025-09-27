@@ -3,7 +3,8 @@ import pandas as pd
 import json
 import os
 
-# File paths
+# Define file paths for dashboard data sources
+# I have used these constants to make file locations easy to maintain
 COMBINED_CSV = "./data/processed/combined_apps.csv"
 INSIGHTS_JSON = "./data/processed/insights.json"
 REPORT_MD = "./reports/insights_report.md"
@@ -12,7 +13,7 @@ REPORT_HTML = "./reports/insights_report.html"
 D2C_CSV = "./data/processed/d2c_cleaned.csv"
 D2C_JSON = "./data/processed/d2c_insights.json"
 
-# --- Loaders ---
+# --- Data Loading Functions ---
 @st.cache_data
 def load_csv(path):
     if os.path.exists(path):
@@ -26,31 +27,33 @@ def load_json(path):
             return json.load(f)
     return {}
 
-# --- Streamlit Setup ---
+# Configure Streamlit page settings
+# This is done because we want a professional-looking dashboard with proper title and layout
 st.set_page_config(page_title="AI-Powered Market Intelligence", layout="wide")
-st.title("📊 AI-Powered Market Intelligence Dashboard")
+st.title("AI-Powered Market Intelligence Dashboard")
 
 tab1, tab2, tab3 = st.tabs(["📂 Dataset Overview", "🤖 Insights", "🛒 D2C Analysis"])
 
 # =============== TAB 1: COMBINED DATASET ==================
 with tab1:
-    st.subheader("Combined Apps Dataset")
+    st.subheader("Cross-Platform Apps Dataset")
     df = load_csv(COMBINED_CSV)
     if not df.empty:
         st.dataframe(df.head(20))
-        st.metric("Total Records", len(df))
-        st.metric("Google Play Apps", len(df[df["Platform"] == "GooglePlay"]))
-        st.metric("App Store Records", len(df[df["Platform"] == "AppStore"]))
+        st.metric("Total Apps", len(df))
+        st.metric("Cross-Platform Apps", df["Available_On_Both_Stores"].sum())
+        st.metric("Avg Google Rating", f"{df['Google_Rating'].mean():.2f}")
+        st.metric("Avg Apple Rating", f"{df['Apple_Rating'].mean():.2f}")
 
         # Download button
         st.download_button(
-            "⬇️ Download Combined Dataset (CSV)",
+            "Download Cross-Platform Dataset (CSV)",
             data=df.to_csv(index=False),
             file_name="combined_apps.csv",
             mime="text/csv"
         )
     else:
-        st.warning("⚠️ No combined dataset found. Run Phase 2 first.")
+        st.warning("No cross-platform dataset found. Run Phase 2 first.")
 
 # =============== TAB 2: AI INSIGHTS ==================
 with tab2:
@@ -99,7 +102,7 @@ with tab3:
         st.dataframe(d2c_df.head(15))
 
         # Key metrics
-        st.write("### 📊 Funnel Metrics")
+        st.write("### Funnel Metrics")
         col1, col2, col3 = st.columns(3)
         col1.metric("Avg CAC", f"${d2c_df['cac'].mean():.2f}")
         col2.metric("Avg ROAS", f"{d2c_df['roas'].mean():.2f}x")

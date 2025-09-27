@@ -7,3 +7,5 @@ streamlit
 pypandoc
 openpyxl  # for Excel file support
 markdown  # for markdown processing
+fuzzywuzzy  # for app name matching
+python-levenshtein  # for fuzzy string matching performance
